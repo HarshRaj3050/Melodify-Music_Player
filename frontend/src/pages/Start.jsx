@@ -24,7 +24,7 @@ const Start = () => {
             <div className="absolute overflow h-full w-full">
                 <img src={startImg} className="h-full w-full object-cover" alt="" />
             </div>
-            <div className="relative sm:w-[620px] sm:h-[560px] w-full h-full md:rounded-3xl  overflow-hidden shadow-xl  text-white">
+            <div className="relative sm:w-155 sm:h-140 w-full h-full md:rounded-3xl  overflow-hidden shadow-xl  text-white">
                 <img src={startInner} alt="" className="hidden sm:block " />
                 {/* text content */}
                 <div className="absolute top-40 px-10 text-center">
