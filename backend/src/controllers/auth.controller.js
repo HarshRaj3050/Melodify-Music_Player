@@ -3,18 +3,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 async function registerUser(req, res) {
-    
-    const {username, email, password, role="user"} = req.body;
+
+    const { username, email, password, role = "user" } = req.body;
 
     const isUserExists = await userModel.findOne({
         $or: [
-            {username},
-            {email}
+            { username },
+            { email }
         ]
     })
 
-    if(isUserExists) {
-        return res.status(409).json({message: "User is already exists"})
+    if (isUserExists) {
+        return res.status(409).json({ message: "User is already exists" })
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -31,7 +31,11 @@ async function registerUser(req, res) {
         role: user.role
     }, process.env.JWT_SECRET)
 
-    res.cookie('token', token);
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: true,        // REQUIRED for HTTPS
+        sameSite: "None"     // REQUIRED for cross-origin
+    });
 
     res.status(201).json({
         message: "User registered successfully",
@@ -46,29 +50,29 @@ async function registerUser(req, res) {
 
 
 async function loginUser(req, res) {
-    let {username, email, password} = req.body;
-    
+    let { username, email, password } = req.body;
+
     let isEmail = username.includes("@");
-    if(isEmail) {
+    if (isEmail) {
         email = username;
         username = "";
     }
 
     const user = await userModel.findOne({
         $or: [
-            {username},
-            {email}
+            { username },
+            { email }
         ]
     })
 
-    if(!user){
-        return res.status(401).json({message: "Invaild Credentials"});
+    if (!user) {
+        return res.status(401).json({ message: "Invaild Credentials" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if(!isPasswordValid){
-        return res.status(401).json({message: "Invalid Credentials"});
+    if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid Credentials" });
     }
 
     const token = jwt.sign({
@@ -76,7 +80,11 @@ async function loginUser(req, res) {
         role: user.role,
     }, process.env.JWT_SECRET)
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,        // REQUIRED for HTTPS
+        sameSite: "None"     // REQUIRED for cross-origin
+    });
 
     res.status(200).json({
         message: "user logged in successfully",
@@ -87,9 +95,9 @@ async function loginUser(req, res) {
             role: user.role
         }
     })
-    
+
 }
 
 
 
-module.exports = {registerUser, loginUser}
+module.exports = { registerUser, loginUser }

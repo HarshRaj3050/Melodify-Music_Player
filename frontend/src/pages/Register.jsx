@@ -39,9 +39,11 @@ const Register = () => {
             alert("Please fill all fields");
             return;
         }
-        
+
         try {
-            const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
+            const res = await axios.post(`${BASE_URL}/api/auth/register`, formData, {
+                withCredentials: true
+            });
             console.log(res.data);
             alert("User Registered Successfully");
 

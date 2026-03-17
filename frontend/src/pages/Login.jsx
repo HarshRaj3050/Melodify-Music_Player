@@ -46,7 +46,7 @@ const Login = () => {
                 formData,
                 { withCredentials: true }
             );
-            
+
             console.log(res.data);
             alert("Login Successful");
 
