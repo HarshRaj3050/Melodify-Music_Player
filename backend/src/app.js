@@ -12,7 +12,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
-            "https://melodify-chi.vercel.app/"
+            "https://melodify-chi.vercel.app"
         ],
         credentials: true
     })
