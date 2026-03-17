@@ -74,7 +74,7 @@ const Login = () => {
 
 
     return (
-        <div className="h-screen w-screen flex items-center justify-center relative">
+        <div className="h-dvh w-screen flex items-center justify-center relative">
             <div className="absolute overflow-hidden h-full w-full">
                 <img src={startImg} className="h-full w-full object-cover " alt="" />
             </div>

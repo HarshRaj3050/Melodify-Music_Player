@@ -20,7 +20,7 @@ const Start = () => {
     }, []);
 
     return (
-        <div className="h-screen w-screen flex items-center justify-center relative">
+        <div className="h-dvh w-screen flex items-center justify-center relative">
             <div className="absolute overflow h-full w-full">
                 <img src={startImg} className="h-full w-full object-cover" alt="" />
             </div>
@@ -28,12 +28,12 @@ const Start = () => {
                 <img src={startInner} alt="" className="hidden sm:block " />
                 {/* text content */}
                 <div className="absolute top-40 px-10 text-center">
-                    <h1 className="text-3xl font-bold mb-3">
-                        Welcome Back
+                    <h1 className="text-3xl font-bold mb-3 ">
+                        Melodify
                     </h1>
 
-                    <p className="text-sm opacity-90">
-                        Enter personal details to your employee account
+                    <p className="text-sm text-black font-semibold">
+                        Find new music, build playlists, and enjoy every single beat
                     </p>
                 </div>
 

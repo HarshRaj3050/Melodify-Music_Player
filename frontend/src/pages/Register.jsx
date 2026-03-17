@@ -70,7 +70,7 @@ const Register = () => {
     };
 
     return (
-        <div className="h-screen w-screen flex items-center justify-center relative">
+        <div className="h-dvh w-dvw flex items-center justify-center relative">
             <div className="absolute overflow-hidden h-full w-full">
                 <img src={startImg} className="h-full w-full object-cover " alt="" />
             </div>
@@ -99,7 +99,7 @@ const Register = () => {
 
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                            <div className="flex justify-between gap-5 items-center">
+                            <div className="flex flex-col sm:flex-row justify-between gap-5 items-center">
                                 <input
                                     type="text"
                                     name="username"
@@ -108,7 +108,7 @@ const Register = () => {
                                     onChange={handleChange}
                                 />
 
-                                <label htmlFor="role" className="w-full">
+                                <label htmlFor="role" className="w-full ">
                                     <select
                                         name="role"
                                         id="role"
@@ -121,7 +121,7 @@ const Register = () => {
                                 </label>
 
                             </div>
-                            <div className="flex justify-between gap-5">
+                            <div className="flex flex-col sm:flex-row  justify-between gap-5">
 
                                 <input
                                     type="email"

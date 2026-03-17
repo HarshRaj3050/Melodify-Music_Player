@@ -4,6 +4,8 @@ import axios from "axios";
 const BASE_URL = import.meta.env.VITE_API_URL;
 import { useNavigate } from "react-router-dom";
 
+import BottomNav from "../components/BottomNav";
+
 const tabs = ["All", "New Release", "Trending", "Top Charts"];
 
 const navItems = [
@@ -87,6 +89,8 @@ export default function Music() {
     const [liked, setLiked] = useState(false);
     const [playlists, setPlaylists] = useState([]);
 
+    const [username, setUsername] = useState("Tester");
+
     // ── Audio state ────────────────────────────────────────────────────────────
     const audioRef = useRef(null);                    // single <audio> element
     const [currentId, setCurrentId] = useState(null); // id of the playing track
@@ -99,38 +103,48 @@ export default function Music() {
 
     // ── Fetch music from your API ──────────────────────────────────────────────
 
-    async function getAllMusic() {
+
+    const [page, setPage] = useState(1);
+
+    async function getAllMusic(pageNum) {          // ← accept page as argument
         try {
-            const res = await axios.get(`${BASE_URL}/api/music/musics`, {
+            const res = await axios.get(`${BASE_URL}/api/music/musics?page=${pageNum}`, {
                 withCredentials: true
             });
-            const data = await res.data;
+            const data = res.data;
+            setUsername(data.username);
             const allMusics = data?.musics || [];
 
             const formattedPlaylists = allMusics.map((e) => ({
                 id: e._id,
                 title: e.title,
                 artist: e.artist.username,
-                // ── Replace with your ImageKit URL ──────────────────────────
                 cover: e.coverUrl || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop",
-                uri: e.uri,   // ImageKit audio URL
+                uri: e.uri,
             }));
 
-            setPlaylists(formattedPlaylists);
-        } catch (error) {
-            if (error.response?.status === 401) {
-                window.location.reload();
-                navigate("/");
+            if (pageNum === 1) {
+                setPlaylists(formattedPlaylists);           // first load → replace
+            } else {
+                setPlaylists(prev => [...prev, ...formattedPlaylists]); // append
             }
 
-            if (error.response?.status === 403) {
-                alert("You don't have permission - Access denied");
-            }
+            setPage(pageNum + 1);                           // ← increment after fetch
+
+        } catch (error) {
+            if (error.response?.status === 401) { navigate("/"); }
+            if (error.response?.status === 403) { alert("Access denied"); }
         }
     }
 
+    function moreSong() {
+        getAllMusic(page);
+    }
+
+
+
     useEffect(() => {
-        getAllMusic();
+        getAllMusic(1);
         // Create a single persistent Audio instance
         audioRef.current = new Audio();
 
@@ -202,7 +216,7 @@ export default function Music() {
 
     return (
         <div
-            className="h-screen w-screen flex justify-center"
+            className="h-dvh w-dvw flex justify-center"
             style={{
                 background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #1a1a2e 100%)",
                 fontFamily: "'Nunito', 'Segoe UI', sans-serif",
@@ -229,7 +243,7 @@ export default function Music() {
                 <div className="relative z-10 flex items-center justify-between px-6 pb-4">
                     <div className="w-11 h-11 rounded-full overflow-hidden ring-2 ring-white/20">
                         <img
-                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face"
+                            src="https://plus.unsplash.com/premium_photo-1739405177421-de315b3606dd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />
@@ -254,7 +268,7 @@ export default function Music() {
 
                 {/* ── Greeting ────────────────────────────────────────────────── */}
                 <div className="relative z-10 px-6 pb-5">
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Hi, Samantha</h1>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">Hi, {username.toUpperCase()}</h1>
                 </div>
 
                 {/* ── Tabs ────────────────────────────────────────────────────── */}
@@ -340,7 +354,7 @@ export default function Music() {
                 <div className="relative z-10 px-6" style={{ paddingBottom: currentTrack ? "160px" : "90px" }}>
                     <div className="flex items-center justify-between mb-3">
                         <h2 className="text-lg font-bold text-white">Top daily playlists</h2>
-                        <button className="text-sm font-medium" style={{ color: "#a3e635" }}>See all</button>
+                        <button className="text-sm font-medium" style={{ color: "#a3e635" }} onClick={moreSong}>See more</button>
                     </div>
 
                     <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar" style={{ maxHeight: "230px" }}>
@@ -488,33 +502,10 @@ export default function Music() {
                 </div>
 
                 {/* ── Bottom Navigation ────────────────────────────────────────── */}
-                <div
-                    className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-around px-4 py-3 rounded-t-3xl"
-                    style={{
-                        background: "rgba(20,20,25,0.95)",
-                        backdropFilter: "blur(20px)",
-                        borderTop: "1px solid rgba(255,255,255,0.07)",
-                    }}
-                >
-                    {navItems.map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveNav(item.id)}
-                            className="flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-200"
-                            style={{ color: activeNav === item.id ? "#a3e635" : "rgba(255,255,255,0.35)" }}
-                        >
-                            <div
-                                className="p-2 rounded-xl transition-all"
-                                style={{ background: activeNav === item.id ? "rgba(163,230,53,0.15)" : "transparent" }}
-                            >
-                                {item.icon}
-                            </div>
-                        </button>
-                    ))}
-                </div>
+                <BottomNav />
 
                 {/* Home indicator */}
-                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full bg-white/20 z-30" />
+
             </div>
 
             <style>{`
