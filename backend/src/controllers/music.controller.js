@@ -1,4 +1,5 @@
 const musicModel = require('../models/music.model');
+const userModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const { uploadFile } = require("../services/storage.service");
 const albumModel = require('../models/album.model');
@@ -54,12 +55,34 @@ async function createAlbum(req, res) {
 }
 
 async function getAllMusic(req, res) {
-    const musics = await musicModel.find().populate("artist","username");
+    const page = parseInt(req.query.page) || 1;  // ?page=1
+    const limit = 2;
+    const skip = (page - 1) * limit;
 
-    res.status(200).json({
-        message: "Musics feached successfully",
-        musics: musics
-    })
+    const musics = await musicModel.find().skip(skip).limit(limit).populate("artist", "username");
+
+    const token = req.cookies.token;
+    let username;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await userModel.findById(decoded.id);;
+        username = user.username;
+
+        res.status(200).json({
+            message: "Musics feached successfully",
+            musics: musics,
+            username,
+            page
+        })
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Server error"
+        });
+    }
 }
 
-module.exports = { createMusic, createAlbum, getAllMusic}
+module.exports = { createMusic, createAlbum, getAllMusic }
