@@ -8,12 +8,20 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "https://melodify-ten.vercel.app"
+        ],
+        credentials: true
+    })
+);
 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/music", musicRoutes);
-app.use("/", (req, res)=>{res.send("api is running")})
+app.use("/", (req, res) => {})
 
 
 module.exports = app

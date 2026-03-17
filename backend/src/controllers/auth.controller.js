@@ -46,7 +46,13 @@ async function registerUser(req, res) {
 
 
 async function loginUser(req, res) {
-    const {username, email, password} = req.body;
+    let {username, email, password} = req.body;
+    
+    let isEmail = username.includes("@");
+    if(isEmail) {
+        email = username;
+        username = "";
+    }
 
     const user = await userModel.findOne({
         $or: [
