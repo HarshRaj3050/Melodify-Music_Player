@@ -5,12 +5,12 @@ import startInner from '../assets/start_inner.png';
 
 import axios from "axios";
 import { useEffect } from "react";
-
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const Start = () => {
 
     useEffect(() => {
-        axios.get("http://localhost:3000/")
+        axios.get(`${BASE_URL}/`)
             .then((response) => {
                 console.log(response.data);
             })

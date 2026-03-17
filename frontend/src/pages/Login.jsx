@@ -1,28 +1,26 @@
 import React, { useState } from "react";
-
 import startImg from '../assets/start.png';
 import startInner from '../assets/start_inner.png';
 import { ChevronLeft } from 'lucide-react';
 
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+import axios from "axios";
+
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-const Register = () => {
+const Login = () => {
 
     const navigate = useNavigate();
 
     const goHome = () => { navigate('/') }
 
+
     const [formData, setFormData] = useState({
         username: "",
-        role: "user",
-        email: "",
-        password: "",
+        password: ""
     });
-
 
     const handleChange = (e) => {
         setFormData({
@@ -35,24 +33,30 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.username || !formData.email || !formData.password) {
+        // console.log(formData);
+
+        if (!formData.username || !formData.password) {
             alert("Please fill all fields");
             return;
         }
-        
+
         try {
-            const res = await axios.post(`${BASE_URL}/api/auth/register`, formData);
+            const res = await axios.post(
+                `${BASE_URL}/api/auth/login`,
+                formData,
+                { withCredentials: true }
+            );
+            
             console.log(res.data);
-            alert("User Registered Successfully");
+            alert("Login Successful");
 
             setFormData({
                 username: "",
-                role: "user",
-                email: "",
                 password: ""
             });
 
-            goHome();
+            navigate('/musics')
+
 
         } catch (error) {
             if (error.response) {
@@ -66,6 +70,8 @@ const Register = () => {
 
         }
     };
+
+
 
     return (
         <div className="h-screen w-screen flex items-center justify-center relative">
@@ -97,76 +103,46 @@ const Register = () => {
 
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                            <div className="flex justify-between gap-5 items-center">
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder="Enter Username Name"
-                                    className="border rounded-lg p-3 w-full"
-                                    onChange={handleChange}
-                                />
 
-                                <label htmlFor="role" className="w-full">
-                                    <select
-                                        name="role"
-                                        id="role"
-                                        className="w-full border rounded-lg h-12 pl-1"
-                                        onChange={handleChange}
-                                    >
-                                        <option value="user" > User</option>
-                                        <option value="artist" > Artist</option>
-                                    </select>
-                                </label>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Enter Username or Email"
+                                className="border rounded-lg p-3 w-full"
+                                onChange={handleChange}
+                            />
 
-                            </div>
-                            <div className="flex justify-between gap-5">
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter Email"
-                                    className="border rounded-lg p-3 w-full"
-                                    onChange={handleChange}
-                                />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Enter Password"
-                                    className="border rounded-lg p-3 w-full"
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-
-                            <label className="text-sm text-black">
-                                <input type="checkbox" className="mr-2" />
-                                I agree to the processing of
-                                <span className="text-blue-600 font-semibold"> Personal data</span>
-                            </label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Enter Password Name"
+                                className="border rounded-lg p-3 w-full"
+                                onChange={handleChange}
+                            />
 
                             <button
                                 type="submit"
                                 className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
                             >
-                                Sign Up
+                                Sign In
                             </button>
 
                         </form>
 
                         <div className="relative flex items-center pt-3 gap-1 w-full justify-center">
-                            <span className="text-[16px]">Already have an account? </span>
+                            <span className="text-[16px]">Already don't have an account? </span>
                             <Link
-                                to="/api/auth/login"
+                                to="/api/auth/register"
                                 className=" text-center bg-transparent font-semibold relative flex items-center text-blue-600"
                             >
-                                Sign In
+                                Sign Up
                             </Link>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Register;
+export default Login;
