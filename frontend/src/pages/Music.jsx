@@ -357,7 +357,7 @@ export default function Music() {
                         <button className="text-sm font-medium" style={{ color: "#a3e635" }} onClick={moreSong}>See more</button>
                     </div>
 
-                    <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar" style={{ maxHeight: "230px" }}>
+                    <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar pb-40" style={{ maxHeight: "230px" }}>
                         {playlists.map((playlist) => {
                             const isActive = currentId === playlist.id;
                             return (
@@ -500,10 +500,7 @@ export default function Music() {
                         </div>
                     </div>
                 </div>
-
-                {/* ── Bottom Navigation ────────────────────────────────────────── */}
-                <BottomNav />
-
+                
                 {/* Home indicator */}
 
             </div>
@@ -513,6 +510,9 @@ export default function Music() {
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
+
+            {/* ── Bottom Navigation ────────────────────────────────────────── */}
+            <BottomNav />
         </div>
     );
 }

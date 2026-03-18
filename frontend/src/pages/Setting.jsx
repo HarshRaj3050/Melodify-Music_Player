@@ -290,7 +290,7 @@ export default function Settings() {
 
                     {/* App version */}
                     <p className="text-center text-xs pb-4" style={{ color: "rgba(255,255,255,0.15)" }}>
-                        Soundwave v1.0.0 · Made with ♪
+                        Melodify v1.0.0 · Made by Harsh
                     </p>
                 </div>
 
