@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BottomNav from "../components/BottomNav";
 
+import { useAudio } from "../context/AudioContext";
+import { useQueryClient } from "@tanstack/react-query";
+
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 // ── Reusable toggle switch ────────────────────────────────────────────────────
@@ -131,18 +134,22 @@ export default function Settings() {
     const [offlineMode, setOfflineMode] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+    const { stopAudio } = useAudio();
+    const queryClient = useQueryClient();
+
     async function handleLogout() {
         try {
             await axios.post(`${BASE_URL}/api/auth/logout`, {}, { withCredentials: true });
         } catch (err) {
             console.log(err);
         }
+        stopAudio();
         navigate("/");
     }
 
     return (
         <div
-            className="h-dvh w-dvw flex justify-center"
+            className="h-dvh w-dvw flex justify-center md:pl-55"
             style={{ background: "#111113", fontFamily: "'Nunito', 'Segoe UI', sans-serif" }}
         >
             <div className="relative w-full h-full overflow-hidden shadow-2xl">

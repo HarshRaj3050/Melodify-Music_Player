@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
     {
@@ -54,45 +54,157 @@ const navItems = [
 ];
 
 export default function BottomNav() {
-    const navigate = useNavigate();
     const location = useLocation();
-
-    // Derive active tab from current URL path
     const activeId = navItems.find((item) => item.path === location.pathname)?.id ?? "home";
 
     return (
-        <div
-            className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-around px-4 py-3 rounded-t-3xl"
-            style={{
-                background: "rgba(20,20,25,0.95)",
-                backdropFilter: "blur(20px)",
-                borderTop: "1px solid rgba(255,255,255,0.07)",
-            }}
-        >
-            {navItems.map((item) => {
-                const isActive = activeId === item.id;
-                return (
-                    <button
-                        key={item.id}
-                        onClick={() => navigate(item.path)}
-                        className="flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-200"
-                        style={{ color: isActive ? "#a3e635" : "rgba(255,255,255,0.35)" }}
-                        aria-label={item.label}
-                        title={item.label}
-                    >
-                        <div
-                            className="p-2 rounded-xl transition-all"
-                            style={{ background: isActive ? "rgba(163,230,53,0.15)" : "transparent" }}
+        <>
+            {/* ══════════════════════════════════════════
+                MOBILE: bottom tab bar  (< 768px)
+            ══════════════════════════════════════════ */}
+            <div
+                className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-4 py-2 rounded-t-3xl"
+                style={{
+                    background: "rgba(14,14,18,0.97)",
+                    backdropFilter: "blur(20px)",
+                    borderTop: "1px solid rgba(255,255,255,0.07)",
+                    fontFamily: "'Nunito', sans-serif",
+                }}
+            >
+                {navItems.map((item) => {
+                    const isActive = activeId === item.id;
+                    return (
+                        <Link
+                            key={item.id}
+                            to={item.path}
+                            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all duration-200"
+                            style={{ color: isActive ? "#a3e635" : "rgba(255,255,255,0.35)" }}
+                            aria-label={item.label}
                         >
-                            {item.icon}
-                        </div>
-                        
-                    </button>
-                );
-            })}
-        </div>
+                            <div
+                                className="p-1.5 rounded-xl transition-all"
+                                style={{ background: isActive ? "rgba(163,230,53,0.15)" : "transparent" }}
+                            >
+                                {item.icon}
+                            </div>
+                        </Link>
+                    );
+                })}
+            </div>
+
+            {/* ══════════════════════════════════════════
+                DESKTOP: left sidebar  (≥ 768px)
+            ══════════════════════════════════════════ */}
+            <aside
+                className="hidden md:flex fixed top-0 left-0 h-full z-50 flex-col"
+                style={{
+                    width: "220px",
+                    background: "rgba(13,13,16,0.98)",
+                    backdropFilter: "blur(30px)",
+                    borderRight: "1px solid rgba(255,255,255,0.055)",
+                    fontFamily: "'Nunito', sans-serif",
+                }}
+            >
+                {/* ── Brand ── */}
+                <div className="flex items-center gap-3 px-5 pt-7 pb-6">
+                    <div
+                        className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0"
+                        style={{
+                            background: "linear-gradient(135deg, rgba(163,230,53,0.2) 0%, rgba(163,230,53,0.05) 100%)",
+                            border: "1px solid rgba(163,230,53,0.25)",
+                            boxShadow: "0 0 20px rgba(163,230,53,0.1)",
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" style={{ color: "#a3e635" }}>
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                        </svg>
+                    </div>
+                    <div className="leading-none">
+                        <p
+                            className="font-black text-white text-sm tracking-[0.15em]"
+                        >
+                            MELODIFY
+                        </p>
+                    
+                    </div>
+                </div>
+
+                {/* ── Divider ── */}
+                <div className="mx-5 h-px mb-5" style={{ background: "rgba(255,255,255,0.055)" }} />
+
+                {/* ── Section label ── */}
+                <p
+                    className="px-5 mb-2 text-[10px] font-black uppercase tracking-[0.2em]"
+                    style={{ color: "rgba(255,255,255,0.2)" }}
+                >
+                    Navigation
+                </p>
+
+                {/* ── Nav links ── */}
+                <nav className="flex flex-col gap-1 px-3 flex-1">
+                    {navItems.map((item) => {
+                        const isActive = activeId === item.id;
+                        return (
+                            <Link
+                                key={item.id}
+                                to={item.path}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200"
+                                style={{
+                                    background: isActive
+                                        ? "rgba(163,230,53,0.09)"
+                                        : "transparent",
+                                    border: isActive
+                                        ? "1px solid rgba(163,230,53,0.14)"
+                                        : "1px solid transparent",
+                                    color: isActive ? "#a3e635" : "rgba(255,255,255,0.4)",
+                                }}
+                            >
+                                {/* Icon */}
+                                <div
+                                    className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all"
+                                    style={{
+                                        background: isActive
+                                            ? "rgba(163,230,53,0.15)"
+                                            : "rgba(255,255,255,0.04)",
+                                    }}
+                                >
+                                    {item.icon}
+                                </div>
+
+                                {/* Label */}
+                                <span
+                                    className="text-sm font-bold flex-1"
+                                    style={{ color: isActive ? "#a3e635" : "rgba(255,255,255,0.5)" }}
+                                >
+                                    {item.label}
+                                </span>
+
+                                {/* Active dot */}
+                                {isActive && (
+                                    <div
+                                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                                        style={{ background: "#a3e635", boxShadow: "0 0 6px #a3e635" }}
+                                    />
+                                )}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                {/* ── Footer ── */}
+                <div className="px-5 py-5">
+                    <div className="h-px mb-3" style={{ background: "rgba(255,255,255,0.055)" }} />
+                    <p className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.15)" }}>
+                        Melodify v1.0.0 - Develop by Harsh
+                    </p>
+                </div>
+            </aside>
+
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+            `}</style>
+        </>
     );
 }
 
-// Named export so you can also import just the navItems array if needed
 export { navItems };
